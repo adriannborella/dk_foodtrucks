@@ -1,0 +1,18 @@
+.home {
+    &__header {
+        height: 15%;
+    }
+
+    &__container {
+        display: flex;
+        flex-direction: row;
+    }
+
+    &__result {
+        flex:3
+    }
+
+    &__map {
+        flex:7
+    }
+}

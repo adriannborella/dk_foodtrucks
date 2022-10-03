@@ -1,0 +1,73 @@
+version: '3'
+
+services:  
+  react:
+    build:
+      context: .
+      dockerfile: ./compose/local/react/Dockerfile
+    volumes:
+      - ./front:/home/app/react
+    network_mode: host
+    stdin_open: true
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    entrypoint: bash
+    depends_on:
+      - db
+    environment:
+      - SECRET_KEY=0c63a75b845e4f7d01107d852e4c2485c51a50aaaa94fc61995e71bbee983a2ac3713831264adb47fb6bd1e058d5f004
+      - PG_DB_NAME=db_develop
+      - PG_USER=adriannborella
+      - PG_PASS=desarrollo
+      - PG_HOST=db
+      - PG_PORT=5432
+      - ALLOWED_HOSTS=*,127.0.0.1,localhost
+      - SECURE_HSTS_SECONDS=15
+      - SECURE_HSTS_INCLUDE_SUBDOMAINS=True
+      - SECURE_SSL_REDIRECT=False
+      - CSRF_COOKIE_SECURE=True
+      - SESSION_COOKIE_SECURE=True
+      - SECURE_HSTS_PRELOAD=True
+      - DJANGO_SETTINGS_MODULE=src.settings.local
+      - RUNSERVER_PORT=9090
+      - RUNSERVER_ADDR=0.0.0.0
+    volumes:
+      - ./back:/home/app/web
+      - eq_static_volume:/home/app/static
+      - eq_media_volume:/home/app/media
+    ports:
+      - "9090:9090"
+    stdin_open: true
+  db:
+    image: "postgres:13.4-alpine"
+    build:
+      context: .
+      dockerfile: ./compose/local/db/Dockerfile
+    environment:
+      - POSTGRES_DB=db_develop
+      - POSTGRES_USER=adriannborella
+      - POSTGRES_PASSWORD=desarrollo
+    stdin_open: true
+    ports:
+      - "9091:5432"
+    volumes:
+      - eq_postgres_volume:/var/lib/mysql
+      - ./db/scripts:/home/app/scripts
+  nginx:    
+    build:
+      context: .
+      dockerfile: ./compose/production/nginx/Dockerfile
+    ports:
+      - 9092:80
+    volumes:
+      - eq_static_volume:/home/app/static
+      - eq_media_volume:/home/app/media
+    depends_on:
+      - django
+
+volumes:
+  eq_postgres_volume:
+  eq_static_volume:
+  eq_media_volume:
