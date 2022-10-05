@@ -1,24 +1,23 @@
-from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework import viewsets
 from rest_framework.response import Response
-import requests
 import pandas as pd
 from geopy.distance import geodesic
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from src.settings.config.dir import BASE_DIR
+from .serializers import TrackFoodSerializer
+from apps.foodtracks.models import TrackFood
+from django_filters.rest_framework import DjangoFilterBackend
 
 
-class TrackFoodApiViewSet(viewsets.ViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+class TrackFoodApiViewSet(ModelViewSet):
+    permissions_classes = [IsAuthenticatedOrReadOnly]
+    queryset = TrackFood.objects.all()
+    serializer_class = TrackFoodSerializer
+    filter_backends = [DjangoFilterBackend]
 
     def get_df(self):
-        url = f"{BASE_DIR.ancestor(1)}/rqzj-sfat.csv"
-        df = pd.read_csv(url)
-        clean_df = df[['objectid', 'applicant', 'facilitytype',
-                       'locationdescription', 'latitude', 'longitude',
-                       'address', 'schedule', 'facilitytype']]
-        clean_df = clean_df.dropna()
-        return clean_df
+        aux = TrackFood.objects.all().values("id", "latitude", "longitude")
+        return pd.DataFrame.from_records(aux)
 
     def list(self, request, format=None):
         """
@@ -33,7 +32,10 @@ class TrackFoodApiViewSet(viewsets.ViewSet):
                 x["longitude"]),
             axis=1)
         result = final.sort_values(by='distance').head(10)
-        return Response(result.to_dict('records'))
+
+        queryset = self.get_queryset().filter(id__in=result['id'].to_list())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def compute_distance(self, origin, latitude, longitude):
         final = (latitude, longitude)

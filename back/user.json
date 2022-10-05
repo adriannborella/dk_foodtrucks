@@ -3,34 +3,16 @@
     "model": "auth.user",
     "pk": 1,
     "fields": {
-      "password": "pbkdf2_sha256$216000$bmh10Exe6WyQ$3RrTTWu6zXdlUQaI5uNvb8XMKWuxaw3oirZpMs2p7eA=",
-      "last_login": null,
-      "username": "adriannborella",
-      "email": "adriannborella@gmail.com",
-      "first_name": "Adrian",
-      "last_name": "Borella",
-      "is_active": true,
-      "is_staff": true,
+      "password": "pbkdf2_sha256$260000$38kT0KnA7fNiW7o5TX47US$LqwerIYBxBDNJ8mQkTbqMyeoaaKtOWHsdMc7xpg0SLI=",
+      "last_login": "2022-10-04T10:22:06.524Z",
       "is_superuser": true,
-      "date_joined": "2021-01-02T16:20:00Z",
-      "groups": [],
-      "user_permissions": []
-    }
-  },
-  {
-    "model": "auth.user",
-    "pk": 1,
-    "fields": {
-      "password": "pbkdf2_sha256$216000$bmh10Exe6WyQ$3RrTTWu6zXdlUQaI5uNvb8XMKWuxaw3oirZpMs2p7eA=",
-      "last_login": null,
-      "username": "test_user",
-      "email": "test_user@gmail.com",
-      "first_name": "Test",
-      "last_name": "User",
-      "is_active": true,
+      "username": "desarrollo",
+      "first_name": "",
+      "last_name": "",
+      "email": "desarrollo@mail.com",
       "is_staff": true,
-      "is_superuser": true,
-      "date_joined": "2021-01-02T16:20:00Z",
+      "is_active": true,
+      "date_joined": "2022-10-04T10:21:59.358Z",
       "groups": [],
       "user_permissions": []
     }

@@ -1,24 +1,23 @@
-FROM python:3.9
+FROM python:3.9-slim-buster
 
 ENV PYTHONUNBUFFERED 1
 
-ENV HOME=/home/app
-ENV APP_HOME=$HOME/web
+WORKDIR /home/app/web
 
-RUN mkdir $HOME
-RUN mkdir $APP_HOME
-RUN mkdir $APP_HOME/static
-RUN mkdir $APP_HOME/uploads
+COPY compose/production/django/entrypoint.sh \
+    back/requirements/base.txt \
+    back/requirements/production.txt  /
 
-ADD requirements/base.txt $APP_HOME
-ADD requirements/production.txt $APP_HOME
+RUN    mkdir /home/app/static \
+    && mkdir /home/app/media \
+    && mkdir /home/app/import_files \
+    && mkdir /home/app/logs \
+    && pip install -U pip \
+    && pip install -r /production.txt \
+    && rm /base.txt \
+    && rm /production.txt 
 
-RUN pip install -U pip
-RUN pip install -r $APP_HOME/production.txt
+ADD ./back /home/app/web
 
-ADD ./project $APP_HOME
-ADD compose/production/django/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
-
-WORKDIR $APP_HOME
 CMD ["/entrypoint.sh"]

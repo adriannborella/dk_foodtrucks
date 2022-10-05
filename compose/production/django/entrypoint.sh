@@ -29,13 +29,13 @@ done
 >&2 echo '=> PostgreSQL is available'
 
 echo "=> Performing database migrations..."
-python manage.py migrate --settings=src.settings.production
+python manage.py migrate
 
 echo "=> Collecting static files..."
-python manage.py collectstatic --noinput --settings=src.settings.production
+python manage.py collectstatic --noinput
 
 echo "=> Compiling translations..."
-python manage.py compilemessages --settings=src.settings.production
+python manage.py compilemessages
 
 echo "=> Starting webserver..."
 gunicorn --bind 0.0.0.0:5000 -w 8 src.wsgi:application 

@@ -1,4 +1,4 @@
 ./manage.py migrate
 ./manage.py loaddata user.json
-./manage.py loaddata innitial_data.json
-./manage.py runserver 0.0.0.0:9000
+./manage.py loaddata data.json
+./manage.py runserver

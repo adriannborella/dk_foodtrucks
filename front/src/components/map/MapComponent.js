@@ -23,13 +23,11 @@ let food_truck = L.icon({
 });
 
 function MyCustomMap(props) {
-  let { getPlaces, center } = props;
+  let { getPlaces } = props;
 
   const map = useMapEvents({
     dragend: async (event) => {
       const position = map.getCenter();
-      center = position;
-
       await getPlaces(position);
     },
   });
@@ -51,7 +49,6 @@ export function MapComponent() {
     center = [data[0].latitude, data[0].longitude];
   }
 
-  console.log(data);
   return (
     <MapContainer center={center} zoom={zoom} scrollWheelZoom={false}>
       <TileLayer
@@ -62,7 +59,8 @@ export function MapComponent() {
         data.map((place) => (
           <Marker
             position={[place.latitude, place.longitude]}
-            icon={place.facilitytype == "Truck" ? food_truck : food_cart}
+            icon={place.facilitytype === "Truck" ? food_truck : food_cart}
+            key={place.objectid}
           >
             <Popup>
               <b>{place.applicant}</b>
