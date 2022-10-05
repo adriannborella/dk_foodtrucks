@@ -25,20 +25,23 @@ class TestViewSet(TestCase):
         result = self.instance.get_df()
         self.assertEqual(expected, result)
 
-    # @patch.object(TrackFoodApiViewSet, 'get_df')
-    # @patch.object(TrackFoodApiViewSet, 'compute_distance')
-    # def test_list(self, compute_distance, get_df):
-    #     obj = {
-    #         'objectid': 100,
-    #         'applicant': 'test',
-    #         'facilitytype': 'Truck',
-    #         'locationdescription': 'Description',
-    #         'latitude': 11,
-    #         'longitude': 12
-    #     }
-    #     get_df.return_value = pd.DataFrame([obj])
-    #     compute_distance.return_value = 1
-    #     mock_request = MagicMock()
-    #     expected = 100
-    #     result = self.instance.list(mock_request)
-    #     self.assertEqual(expected, result.data[0]["objectid"])
+    @patch.object(TrackFoodApiViewSet, 'get_serializer')
+    @patch.object(TrackFoodApiViewSet, 'get_queryset')
+    @patch.object(TrackFoodApiViewSet, 'get_df')
+    @patch.object(TrackFoodApiViewSet, 'compute_distance')
+    def test_list(self, compute_distance, get_df,
+                  get_queryset, get_serializer):
+        obj = {
+            "id": 1,
+            "latitude": 1,
+            "longitude": 1
+        }
+        serializer_mock = MagicMock()
+        serializer_mock.data = obj
+        get_serializer.return_value = serializer_mock
+        get_df.return_value = pd.DataFrame([obj])
+        compute_distance.return_value = 1
+        mock_request = MagicMock()
+        expected = obj
+        result = self.instance.list(mock_request)
+        self.assertEqual(expected, result.data)
