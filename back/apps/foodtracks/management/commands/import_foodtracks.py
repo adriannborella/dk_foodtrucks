@@ -14,7 +14,7 @@ class Command(BaseCommand):
         df = pd.read_csv(url)
         clean_df = df[['objectid', 'applicant', 'facilitytype',
                        'locationdescription', 'latitude', 'longitude',
-                       'address', 'schedule', 'facilitytype']]
+                       'address', 'schedule']]
         clean_df = clean_df.replace(0, np.nan)
         clean_df = clean_df.dropna()
         return clean_df
